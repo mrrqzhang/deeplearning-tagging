@@ -1,0 +1,68 @@
+#!/bin/bash
+
+
+#huati_material_basis_0227_0406
+init_dir=../model_output/huati_material_basis_0227_0406
+init_model=model.ckpt-2495206
+
+#huati_material_basis_0201_0226
+#init_dir=../model_output/huati_material_basis_0201_0226
+#init_model=model.ckpt-2541555
+
+#huati_material_basis_0201_0316
+#init_dir=../model_output/huati_material_basis_0201_0316
+#init_model=model.ckpt-2316000
+
+#use huati_material_basis
+#init_dir=../model_output/huati_material_basis
+#init_model=model.ckpt-1561631
+
+#huati_material_basis_0201_0213
+#init_dir=../model_output/huati_material_basis_0201_0213
+#init_model=model.ckpt-2063111
+
+#cht_huati_human_positive
+#init_dir=../model_output/cht_huati_human_positive
+#init_model=model.ckpt-1587014
+
+#cht_huati_human_positive_v2
+#init_dir=../model_output/cht_huati_human_positive_v2
+#init_model=model.ckpt-1963278
+
+#use bert base
+#init_dir=../bert_base_dir/chinese_L-12_H-768_A-12
+#init_model=bert_model.ckpt
+
+#use cht_increased_batch16
+#init_dir=../model_output/cht_increased_batch16
+#init_model=model.ckpt-718619
+
+
+export BERT_BASE_DIR=../bert_base_dir/chinese_L-12_H-768_A-12
+export DATA_DIR=../data/topic_mc/ #pengfei_judged_reorder_biclass.txt    #data/huati_material_basis
+export OUTPUT_DIR=../model_output/topic_mc_huati_material_basis_0227_0406
+export INIT_CKPT_DIR=$init_dir
+export ckpt=$init_model
+
+
+CUDA_VISIBLE_DEVICES=2 python run_classifier_py3.py \
+  --task_name=HuatiMC \
+  --do_train=true \
+  --do_eval=true \
+  --do_predict=true \
+  --data_dir=$DATA_DIR \
+  --vocab_file=$BERT_BASE_DIR/vocab.txt \
+  --bert_config_file=$BERT_BASE_DIR/bert_config_4layer.json \
+  --init_checkpoint=$INIT_CKPT_DIR/$ckpt \
+  --max_seq_length=256 \
+  --train_batch_size=16 \
+  --predict_batch_size=16 \
+  --eval_batch_size=16 \
+  --learning_rate=2e-5 \
+  --num_train_epochs=3.0 \
+  --num_variant_tags=1 \
+  --output_dir=$OUTPUT_DIR
+
+
+
+
